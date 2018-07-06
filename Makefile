@@ -62,6 +62,10 @@ lint: tools.golint
 #-----------------
 .PHONY: $(BINDIR)/test $(BINDIR)/test-linux docker integration integration.ads integration.xds integration.rest integration.docker
 
+$(BINDIR)/ecs: vendor
+	@echo "--> building ecs binary"
+	@go build -race -o $@ pkg/ecs/main/main.go
+
 $(BINDIR)/test: vendor
 	@echo "--> building test binary"
 	@go build -race -o $@ pkg/test/main/main.go
@@ -73,6 +77,8 @@ $(BINDIR)/test-linux: vendor
 docker: $(BINDIR)/test-linux
 	@echo "--> building test docker image"
 	@docker build -t test .
+
+ecs: $(BINDIR)/ecs
 
 integration: integration.ads integration.xds integration.rest
 
